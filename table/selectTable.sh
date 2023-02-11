@@ -21,7 +21,8 @@ do
                 do
                 case $select in
                     "All Data")
-                    echo ""
+                    clear
+                    # echo ""
                         # show columns names
                         for i in "${!arrayColumn[@]}"  
                         do  
@@ -48,6 +49,7 @@ do
                             $column)
                                 read -p "enter the value of $column please: " colValue
                                 echo ""
+                                clear
                                 # show columns names
                                 for i in "${!arrayColumn[@]}"  
                                 do  
@@ -79,10 +81,11 @@ do
                         do
                         case $column in                                    
                             "Exit")
+                                clear
                                 break 2
                             ;;
                             $column)
-
+                                clear
                                 for i in "${!arrayColumn[@]}"; do
                                     if [[ "${arrayColumn[$i]}" = "${column}" ]]; then
                                         x=${i}
@@ -101,6 +104,7 @@ do
                                 break
                             ;;
                             *)
+                                clear
                                 echo "please choice a number"
                                 break
                             ;;
@@ -110,9 +114,11 @@ do
                         break
                     ;;
                     "Exit")
+                        clear
                         break 3
                     ;;
                     *)
+                        clear
                         echo "Please Choice number from the list"
                     ;;
                 esac

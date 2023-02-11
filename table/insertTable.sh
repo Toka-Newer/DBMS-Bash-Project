@@ -7,61 +7,73 @@ do
     read -p "Enter Table Name: " table
     if [[ -e ../../DataBase/$db/$table ]] && [[ -e ../../DataBase/$db/MetaData$table ]]
     then
-    ####################################
-        # insert into table
-    ####################################
 
-        nr=`awk -F: 'END{print $1}' ../../DataBase/$db/$table;`
-        # echo $nr
-        nr=$((nr+1))
-        
-        awk -F : '
-        BEGIN{print $1} 
-        {
-            if($1 == "id"){
-                printf '$nr' >> "../../DataBase/'$db'/'$table'"
-                
-            }else{
-                printf "Please enter " $1 " value: "
-                getline value < "-" 
+        while true; do
+            nr=`awk -F: 'END{print $1}' ../../DataBase/$db/$table;`
+            # echo $nr
+            nr=$((nr+1))
+            
+            awk -F : '
+            BEGIN{print $1} 
+            {
+                if($1 == "id"){
+                    printf '$nr' >> "../../DataBase/'$db'/'$table'"
+                    
+                }else{
+                    printf "Please enter " $1 " value: "
+                    getline value < "-" 
+                }
             }
-        }
-        $2 == "int"{
-            if(NR==1){
+            $2 == "int"{
+                if(NR==1){
 
-            }else if(value~"[0-9]"){
-                printf ":"value >> "../../DataBase/'$db'/'$table'"
-            }else {
-                f=1;
-                while (f){
-                    print "please enter a valid value"
-                    getline new < "-"
-                    if(new~"[0-9]"){
-                        printf ":"value >> "../../DataBase/'$db'/'$table'"
-                        f=0
+                }else if(value~"[0-9]"){
+                    printf ":"value >> "../../DataBase/'$db'/'$table'"
+                }else {
+                    f=1;
+                    while (f){
+                        print "please enter a valid value"
+                        getline new < "-"
+                        if(new~"[0-9]"){
+                            printf ":"value >> "../../DataBase/'$db'/'$table'"
+                            f=0
+                        }
                     }
                 }
             }
-        }
-        $2 == "string" {
-            if (value~"[a-zA-z]"){
-                printf ":"value >> "../../DataBase/'$db'/'$table'"
-            }else {
-                f=1;
-                while (f){
-                    print "please enter a valid value"
-                    getline new < "-"
-                    if(new~"[a-zA-z]"){
-                        printf ":"value >> "../../DataBase/'$db'/'$table'"
-                        f=0
+            $2 == "string" {
+                if (value~"[a-zA-z]"){
+                    printf ":"value >> "../../DataBase/'$db'/'$table'"
+                }else {
+                    f=1;
+                    while (f){
+                        print "please enter a valid value"
+                        getline new < "-"
+                        if(new~"[a-zA-z]"){
+                            printf ":"value >> "../../DataBase/'$db'/'$table'"
+                            f=0
+                        }
                     }
                 }
             }
-        }
-        END{} ' ../../DataBase/$db/MetaData$table
-        
-        echo "" >> "../../DataBase/$db/$table"
-        sed -i 's/'" "'/'""'/g' ../../DataBase/$db/$table
+            END{} ' ../../DataBase/$db/MetaData$table
+            
+            echo "" >> "../../DataBase/$db/$table"
+            sed -i 's/'" "'/'""'/g' ../../DataBase/$db/$table
+
+            echo ""
+            echo "data inserted successfully"
+            echo ""
+            
+            echo "If you want to insert again enter y else enter n."
+            read x
+            if [[ $x = n ]]
+            then
+                clear
+                break 3
+            fi
+
+        done    
 
         break 2
 

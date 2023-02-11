@@ -21,6 +21,9 @@ do
                 case $select in
                     "All Data")
                         sed -i 'd' ../../DataBase/$db/$Tname
+                        echo ""
+                        echo "all data deleted"
+                        echo ""
                         break
                     ;;
                     "Specific Column")
@@ -52,15 +55,14 @@ do
                                 for (( i=$length; i>=0; --i ))
                                 do
                                     sed -i "${nrDel[$i]}"'d' ../../DataBase/$db/$Tname
-                                    echo "deleted"
-                                    # check=1
                                 done
-                                # if [[ check==1 ]]
-                                # then
-                                #     echo "deleted"
-                                # else
-                                #     echo "value not exist"
-                                # fi
+
+                                if [[ $? -eq 1 ]]
+                                then
+                                    echo "deleted"
+                                else
+                                    echo "value not exist"
+                                fi
                                 
                                 break
                             ;;

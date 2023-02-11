@@ -9,12 +9,15 @@ do
     then
         clear
         nrTable=`awk 'END{print NR}' ../../DataBase/$db/MetaData$Tname;` 
+        declare -a ids=()
+        ids+=(`awk -F: '{print $1}' ../../DataBase/$db/$Tname;`)
         # get columns names
         declare -a arrayColumn=()
         for (( i=2 ; i<=$nrTable ; i++ )); do
             arrayColumn+=(`awk -F: -v"i=$i" '{if(NR==i){print $1}}' ../../DataBase/$db/MetaData$Tname;`)
         done
-        
+        length=${#arrayColumn[*]}
+
         while true
         do
             select column in "${arrayColumn[@]}" "Exit"
@@ -24,58 +27,78 @@ do
                     break 2
                 ;;
                 $column)
-
                     select update in "Specific id" "All Data" "Exit"
                     do
                         case $update in                                    
                             "Specific id")
                                 read -p "enter the value of $update please: " colValue
-                                read -p "enter the new value of $column please: " newValue
-
-                                # know column number
-                                for i in "${!arrayColumn[@]}"; do
-                                    if [[ "${arrayColumn[$i]}" = "${column}" ]]; then
-                                        x=${i}
-                                        x=$((x+2))
-                                        break
-                                    fi
-                                done
-
-                                # nfData=`awk -F: 'END{print NF}' ../../DataBase/$db/$Tname;` 
                                 
-                                awk -F: -v"colValue=$colValue" -v"newValue=$newValue" -v"x=$x" -v"nfData=$nfData" '
-                                {
-                                    if($1==colValue){
-                                        
-                                        $x=newValue
-                                        
-                                    }
-                                    {print}
-                                }'  ../../DataBase/$db/$Tname > ../../DataBase/$db/tmp && mv ../../DataBase/$db/tmp ../../DataBase/$db/$Tname
+                                if [[ $colValue != 0 && " ${ids[@]} " =~ " $colValue " ]]
+                                then
 
-                                sed -i 's/'" "'/'":"'/g' ../../DataBase/$db/$Tname
+                                    read -p "enter the new value of $column please: " newValue
 
-                                echo "updated"
-
-                                    # sed -i "${nrDel[$i]}"'d' ../../DataBase/$db/$Tname
+                                    # know column number
+                                    for i in "${!arrayColumn[@]}"; do
+                                        if [[ "${arrayColumn[$i]}" = "${column}" ]]; then
+                                            x=${i}
+                                            x=$((x+2))
+                                            break
+                                        fi
+                                    done
+                                    
+                                    awk -F: -v"colValue=$colValue" -v"newValue=$newValue" -v"x=$x" '
+                                    {
+                                        if($1==colValue){
+                                            $x=newValue
+                                        }
+                                        {print}
+                                    }'  ../../DataBase/$db/$Tname > ../../DataBase/$db/tmp && mv ../../DataBase/$db/tmp ../../DataBase/$db/$Tname
+                                    
+                                    sed -i 's/'" "'/'":"'/g' ../../DataBase/$db/$Tname
+                                    echo ""
+                                    echo "updated"
+                                    echo ""
+                                else
+                                    echo "value not exist"
+                                fi
 
                                 break
                             ;;
                             "All Data")
                                 read -p "enter the value of $column please: " colValue
-                                read -p "enter the new value of $column please: " newValue
 
-                                # know column number
-                                for i in "${!arrayColumn[@]}"; do
-                                    if [[ "${arrayColumn[$i]}" = "${column}" ]]; then
-                                        x=${i}
-                                        x=$((x+1))
-                                        break
-                                    fi
+                                NRTable=`awk 'END{print NR}' ../../DataBase/$db/$Tname;` 
+                                declare -a columnValue=()
+                                for (( i=1 ; i<=$NRTable ; i++ )); do
+                                    columnValue+=(`awk -F: -v"i=$i" -v"x=$x" '{if(NR==i){print $x}}' ../../DataBase/$db/$Tname;`)
                                 done
 
-                                sed -i 's/'"$colValue"'/'"$newValue"'/g' ../../DataBase/$db/$Tname
-                                
+                                if [[ $colValue != 0 && " ${columnValue[@]} " =~ " $colValue " ]]
+                                then
+
+                                    read -p "enter the new value of $column please: " newValue
+
+                                    # know column number
+                                    for i in "${!arrayColumn[@]}"; do
+                                        if [[ "${arrayColumn[$i]}" = "${column}" ]]; then
+                                            x=${i}
+                                            x=$((x+2))
+                                            break
+                                        fi
+                                    done
+
+                                    sed -i 's/'"$colValue"'/'"$newValue"'/g' ../../DataBase/$db/$Tname
+                                    echo ""
+                                    echo "updated"
+                                    echo ""
+                                else
+                                    echo "value not exist"
+                                    echo ""
+                                    echo "please choice again"
+                                    echo ""
+                                fi
+
                                 break
                             ;;
                             "Exit")
@@ -86,6 +109,7 @@ do
                     break
                 ;;
                 *)
+                    clear
                     echo "please choice a number"
                     break
                 ;;

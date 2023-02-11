@@ -46,22 +46,34 @@ do
                                     fi
                                 done
                                 
-                                declare -a nrDel=(`awk -F: -v"colValue=$colValue" -v"x=$x" '{if(colValue == $x){print NR}}' ../../DataBase/$db/$Tname;`)
-                            
-                                length=${#nrDel[*]}
-                                length=$((length-1))
-
-                                check=0;
-                                for (( i=$length; i>=0; --i ))
-                                do
-                                    sed -i "${nrDel[$i]}"'d' ../../DataBase/$db/$Tname
+                                NRTable=`awk 'END{print NR}' ../../DataBase/$db/$Tname;` 
+                                declare -a columnValue=()
+                                for (( i=1 ; i<=$NRTable ; i++ )); do
+                                    columnValue+=(`awk -F: -v"i=$i" -v"x=$x" '{if(NR==i){print $x}}' ../../DataBase/$db/$Tname;`)
                                 done
 
-                                if [[ $? -eq 1 ]]
+                                if [[ $colValue != 0 && " ${columnValue[@]} " =~ " $colValue " ]]
                                 then
+
+                                    declare -a nrDel=(`awk -F: -v"colValue=$colValue" -v"x=$x" '{if(colValue == $x){print NR}}' ../../DataBase/$db/$Tname;`)
+                                
+                                    length=${#nrDel[*]}
+                                    length=$((length-1))
+
+                                    check=0;
+                                    for (( i=$length; i>=0; --i ))
+                                    do
+                                        sed -i "${nrDel[$i]}"'d' ../../DataBase/$db/$Tname
+                                    done
+
+                                    echo ""
                                     echo "deleted"
+                                    echo ""
+
                                 else
+                                    echo ""
                                     echo "value not exist"
+                                    echo ""
                                 fi
                                 
                                 break

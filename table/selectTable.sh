@@ -21,8 +21,7 @@ do
                 do
                 case $select in
                     "All Data")
-                    clear
-                    # echo ""
+                        clear
                         # show columns names
                         for i in "${!arrayColumn[@]}"  
                         do  
@@ -61,8 +60,20 @@ do
                                     fi
                                 done 
                                 echo ""
-                                
-                                sed -n '/'$colValue'/p' ../../DataBase/$db/$Tname
+
+                                # know column number
+                                for i in "${!arrayColumn[@]}"; do
+                                    if [[ "${arrayColumn[$i]}" = "${column}" ]]; then
+                                        x=${i}
+                                        x=$((x+1))
+                                        break
+                                    fi
+                                done
+                                declare -a showRecord=()
+                                showRecord+=(`awk -F: -v"colValue=$colValue" -v"x=$x" '{if( $x == colValue ){print $0; }}' ../../DataBase/$db/$Tname;`)
+                                for i in "${!showRecord[@]}"; do
+                                    echo ${showRecord[$i]}
+                                done
                                 echo ""
                                 break
                             ;;

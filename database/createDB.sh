@@ -5,22 +5,26 @@ clear
 while true
 do
     read -p "Enter Database Name: " db
-    if [[ -e ../../DataBase/$db ]]
+    if [[ $db =~ ^([a-zA-Z]{3})[a-zA-Z0-9\w]*$ ]]
     then
-        echo "Sorry this Database already exist.."
-        break 2
-    elif [[ $db = +([*a-zA-z0-9]) ]]
-    then
-        mkdir ../../DataBase/$db
-        echo "Database created"
-        break 2
+        if [[ -e ../../DataBase/$db ]]
+        then
+            clear
+            echo "Sorry this Database '"$db"' already exist.."
+            break
+        else
+            mkdir ../../DataBase/$db
+            clear
+            echo "Database created"
+            break
+        fi
     else
-        echo "Database name shouldn't start with number or contain special characters."
-        echo "If you want to exit enter y else if you want to enter new name enter n."
+        echo "Database name should be at least 3 characters and shouldn't start with number or contain special characters."
+        echo "If you want to exit Enter (y) else Enter any key."
         read x
         if [[ $x = y ]]
         then
-            break 2
+            break
         fi
     fi
 done

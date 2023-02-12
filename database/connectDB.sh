@@ -5,19 +5,30 @@ clear
 while true
 do
     read -p "Enter Database Name: " db
-    if [[ -e ../../DataBase/$db ]]
+    if [[ $db =~ ^([a-zA-Z]{3})[a-zA-Z0-9\w]*$ ]]
     then
-        cd ../table
-        . ./tables.sh
-        cd ../database
-        break 2
+        if [[ -e ../../DataBase/$db ]]
+        then
+            cd ../table
+            . ./tables.sh
+            cd ../database
+            break
+        else
+            echo "Database name doesn't exist."
+            echo "If you want to exit Enter (y) else Enter any key."
+            read x
+            if [[ $x = y ]]
+            then
+                break
+            fi
+        fi
     else
-        echo "Database name doesn't exist."
-        echo "If you want to exit enter y else if you want to enter new name enter n."
+        echo "Database name should be at least 3 characters and shouldn't start with number or contain special characters."
+        echo "If you want to exit Enter (y) else Enter any key."
         read x
         if [[ $x = y ]]
         then
-            break 2
+            break
         fi
     fi
 done

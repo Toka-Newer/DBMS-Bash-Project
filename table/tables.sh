@@ -2,11 +2,11 @@
 export LC_COLLATE=C 
 shopt -s extglob # Active Regex 
 
-    while true
+while true
+do
+    PS3="Choice a Number: "
+    select choice in "Create Table" "List Tables" "Drop Table" "Insert Into Table" "Select From Table" "Delete From Table" "Update Table" "Exit"
     do
-        PS3="Choice a Number: "
-        select choice in "Create Table" "List Tables" "Drop Table" "Insert Into Table" "Select From Table" "Delete From Table" "Update Table" "Exit"
-        do
         case $choice in
             "Create Table")
                 . ./createTable.sh
@@ -46,5 +46,5 @@ shopt -s extglob # Active Regex
                 break
             ;;
         esac
-        done
     done
+done

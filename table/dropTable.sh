@@ -5,19 +5,30 @@ clear
 while true
 do
     read -p "Enter Table Name: " table
-    if [[ -e ../../DataBase/$db/$table ]]  && [[ -e ../../DataBase/$db/MetaData$table ]]
+    if [[ $table =~ ^([a-zA-Z]{3})[a-zA-Z0-9\w]*$ ]]
     then
-        rm ../../DataBase/$db/$table
-        rm ../../DataBase/$db/MetaData$table
-        echo "Table deleted."
-        break 2
+        if [[ -e ../../DataBase/$db/$table ]]  && [[ -e ../../DataBase/$db/MetaData$table ]]
+        then
+            rm ../../DataBase/$db/$table
+            rm ../../DataBase/$db/MetaData$table
+            echo "Table deleted."
+            break
+        else
+            echo "Table name doesn't exist."
+            echo "If you want to exit Enter (y) else Enter any key."
+            read x
+            if [[ $x = y ]]
+            then
+                break
+            fi
+        fi
     else
-        echo "Table name doesn't exist."
-        echo "If you want to exit enter y else if you want to enter new name enter n."
+        echo "Table name should be at least 3 characters and shouldn't start with number or contain special characters."
+        echo "If you want to exit Enter (y) else Enter any key."
         read x
         if [[ $x = y ]]
         then
-            break 2
+            break
         fi
     fi
 done

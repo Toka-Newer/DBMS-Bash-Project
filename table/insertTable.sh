@@ -15,7 +15,6 @@ do
                 nr=$((nr+1))
                 
                 awk -F : '
-                BEGIN{print $1} 
                 {
                     if($1 == "id"){
                         printf '$nr' >> "../../DataBase/'$db'/'$table'"
@@ -59,7 +58,7 @@ do
                 END{} ' ../../DataBase/$db/MetaData$table
                 
                 echo "" >> "../../DataBase/$db/$table"
-                sed -i 's/'" "'/'""'/g' ../../DataBase/$db/$table
+                # sed -i 's/'" "'/'""'/g' ../../DataBase/$db/$table
 
                 echo ""
                 echo "data inserted successfully"

@@ -55,9 +55,9 @@ do
                                                 $x=newValue
                                             }
                                             {print}
-                                        }'  ../../DataBase/$db/$Tname > ../../DataBase/$db/tmp && mv ../../DataBase/$db/tmp ../../DataBase/$db/$Tname
+                                        }' OFS=':' ../../DataBase/$db/$Tname > ../../DataBase/$db/tmp && mv ../../DataBase/$db/tmp ../../DataBase/$db/$Tname
                                         
-                                        sed -i 's/'" "'/'":"'/g' ../../DataBase/$db/$Tname
+                                        # sed -i 's/'" "'/'":"'/g' ../../DataBase/$db/$Tname
                                         echo ""
                                         echo "updated"
                                         echo ""

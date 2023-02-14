@@ -72,13 +72,22 @@ do
                                 ;;
                                 "All Data")
                                     read -p "enter the value of $column please: " colValue
-
+                                    
+                                    # know column number
+                                    for i in "${!arrayColumn[@]}"; do
+                                        if [[ "${arrayColumn[$i]}" = "${column}" ]]; then
+                                            x=${i}
+                                            x=$((x+2))
+                                            break
+                                        fi
+                                    done
+                                    
                                     NRTable=`awk 'END{print NR}' ../../DataBase/$db/$Tname;` 
                                     declare -a columnValue=()
                                     for (( i=1 ; i<=$NRTable ; i++ )); do
                                         columnValue+=(`awk -F: -v"i=$i" -v"x=$x" '{if(NR==i){print $x}}' ../../DataBase/$db/$Tname;`)
                                     done
-
+                                    
                                     if [[ $colValue != 0 && " ${columnValue[@]} " =~ " $colValue " ]]
                                     then
 
